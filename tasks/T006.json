@@ -1,0 +1,10 @@
+{
+  "id": "T006",
+  "goal": "Create bank.py with a class Bank (deposit, withdraw, balance) and test_bank.py using unittest. Overdraft must raise ValueError. Run `python3 -m unittest discover -q` to verify.",
+  "workspace": "workspaces/T006",
+  "timeout_s": 180,
+  "success": {
+    "files": {"bank.py": "class Bank", "test_bank.py": "unittest"},
+    "tests": ["python3 -m unittest discover -q"]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "version": "p2",
+  "allowed_bin": ["python", "python3", "pytest", "ls", "cat", "grep", "rg", "git", "echo", "mkdir", "touch", "head", "tail", "wc", "sed", "find"],
+  "deny_patterns": ["rm -rf", "sudo", "chmod", "chown", "curl", "wget", "ssh", "scp", "nc ", "base64", "os.system", "subprocess", "shutil.rmtree", "/etc/", "/root/", "~/.ssh", "authorized_keys"],
+  "sensitive_markers": [".git/", ".env", ".ssh", "authorized_keys"],
+  "max_write_bytes": 200000,
+  "allow_stderr_merge": true,
+  "deny_modules": [],
+  "injection_patterns": ["ignore (all )?(previous|prior) instructions", "disregard (all )?(previous|prior) instructions", "you are now", "system prompt", "exfiltrate", "send .*secret"],
+  "secret_patterns": ["sk-[A-Za-z0-9]{10,}", "AKIA[0-9A-Z]{16}", "password\\s*=\\s*\\S+"]
+}

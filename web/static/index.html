@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Harness Console</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">H</span>
+      <div>
+        <strong>Harness</strong>
+        <span>runtime console</span>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="dashboard">总览</button>
+      <button class="tab" data-tab="run">运行</button>
+      <button class="tab" data-tab="runs">Run 记录</button>
+      <button class="tab" data-tab="memory">记忆审核</button>
+    </nav>
+    <div class="health-pill">
+      <span class="dot" id="health-dot"></span>
+      <span id="health-text">checking…</span>
+    </div>
+    <a class="ghost" href="/" style="text-decoration:none;padding:8px 12px;font-size:12px">用户端 ↗</a>
+  </header>
+
+  <main>
+    <section class="tab-panel active" id="tab-dashboard">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">AGENT RUNTIME HARNESS</p>
+          <h1>看见每一步，管住每个工具。</h1>
+          <p class="lead">正常任务、攻击集、策略回放、记忆审核，一个页面跑完。</p>
+        </div>
+        <div class="hero-actions">
+          <button class="primary" data-go="run">跑一个任务</button>
+          <button class="ghost" data-go="memory">审核记忆</button>
+        </div>
+      </div>
+
+      <div class="health-grid" id="health-grid">
+        <div class="card health-card" id="health-litellm">
+          <span class="card-label">LiteLLM</span>
+          <strong class="status-text">checking…</strong>
+          <small>模型代理 · 每次运行都需要</small>
+        </div>
+        <div class="card health-card" id="health-pi">
+          <span class="card-label">pi agent</span>
+          <strong class="status-text">checking…</strong>
+          <small>CLI，不是常驻服务</small>
+        </div>
+        <div class="card health-card" id="health-openviking">
+          <span class="card-label">OpenViking</span>
+          <strong class="status-text">checking…</strong>
+          <small>只读记忆检索适配</small>
+        </div>
+        <div class="card health-card" id="health-memory">
+          <span class="card-label">Memory</span>
+          <strong class="status-text">—</strong>
+          <small>active / quarantined</small>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <h2>最近运行</h2>
+            <button class="link" data-go="runs">全部 →</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>任务</th><th>结果</th><th>steps</th><th>tokens</th><th>cost</th></tr></thead>
+              <tbody id="dashboard-runs"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>启动顺序</h2></div>
+          <ol class="steps">
+            <li><strong>LiteLLM</strong><span>必须先在 <code>127.0.0.1:4000</code> 运行；Harness 通过它调模型。</span></li>
+            <li><strong>pi</strong><span>不用单独启动；每次运行由 Harness 调起 CLI。</span></li>
+            <li><strong>Harness Console</strong><span>就是本页面；跑任务、看 trace、审核记忆。</span></li>
+            <li><strong>OpenViking（可选）</strong><span>设置了 <code>OPENVIKING_URL</code> 才会出现在健康检查里。</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-run">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">RUN</p>
+          <h1>跑一个任务</h1>
+        </div>
+        <span class="hint">每次运行都会生成独立 run 目录</span>
+      </div>
+      <div class="grid-2 run-layout">
+        <form class="card form" id="run-form">
+          <label>类型
+            <select id="run-kind">
+              <option value="task">正常任务</option>
+              <option value="attack">攻击</option>
+              <option value="demo">Demo</option>
+            </select>
+          </label>
+          <label>任务
+            <select id="run-item"></select>
+          </label>
+          <label>策略
+            <select id="run-policy"></select>
+          </label>
+          <label>记忆 scope
+            <input id="run-scope" list="scope-list" placeholder="default" />
+            <datalist id="scope-list"></datalist>
+          </label>
+          <label class="row-check">
+            <input type="checkbox" id="run-mcp" checked />
+            <span>MCP-only（--no-builtin-tools）</span>
+          </label>
+          <label>追加 system prompt（可选）
+            <textarea id="run-prompt" rows="3" placeholder="例如：先跑测试，失败就修。"></textarea>
+          </label>
+          <button class="primary" type="submit" id="run-submit">开始运行</button>
+        </form>
+        <div class="card job-card">
+          <div class="card-head"><h2>运行状态</h2></div>
+          <div id="job-panel" class="empty">还没有运行。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-runs">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">TRACES</p>
+          <h1>Run 记录</h1>
+        </div>
+        <span class="hint">点一行看 result / report / audit / events</span>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>任务</th><th>kind</th><th>status</th><th>outcome</th><th>verdict</th><th>steps</th><th>tokens</th><th>cost</th><th>policy</th></tr></thead>
+            <tbody id="runs-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-memory">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">MEMORY REVIEW</p>
+          <h1>记忆审核</h1>
+        </div>
+        <span class="hint">quarantined 必须人工 approve 才能进入 active</span>
+      </div>
+      <div class="memory-stats" id="memory-stats"></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <h2>队列</h2>
+            <div class="filters">
+              <select id="memory-scope"><option value="">all scopes</option></select>
+              <select id="memory-status">
+                <option value="quarantined">quarantined</option>
+                <option value="">all</option>
+                <option value="active">active</option>
+                <option value="rejected">rejected</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>scope</th><th>kind</th><th>text</th><th>source</th><th>status</th><th></th></tr></thead>
+              <tbody id="memory-table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="stack">
+          <form class="card form" id="memory-form">
+            <div class="card-head"><h2>加一条用户记忆</h2></div>
+            <label>scope <input id="mem-scope" placeholder="default" /></label>
+            <label>key <input id="mem-key" placeholder="check_command" /></label>
+            <label>kind <input id="mem-kind" value="fact" /></label>
+            <label>text <textarea id="mem-text" rows="3" placeholder="项目约定 / 事实"></textarea></label>
+            <button class="primary" type="submit">写入 active</button>
+            <p class="hint">用户来源直接 active；agent 写入一律 quarantine。</p>
+          </form>
+          <div class="card">
+            <div class="card-head"><h2>OpenViking 检索</h2></div>
+            <div class="inline">
+              <input id="ov-q" placeholder="语义检索记忆…" />
+              <button class="ghost" id="ov-search">搜索</button>
+            </div>
+            <div id="ov-results" class="ov-results empty">未配置或还没搜索。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="drawer" id="drawer">
+    <div class="drawer-head">
+      <div>
+        <span class="eyebrow">RUN DETAIL</span>
+        <h2 id="drawer-title">—</h2>
+      </div>
+      <button class="icon-btn" id="drawer-close">×</button>
+    </div>
+    <div class="drawer-meta" id="drawer-meta"></div>
+    <div class="drawer-actions">
+      <button class="ghost" id="extract-lesson">从失败 trace 抽取 lesson</button>
+    </div>
+    <div class="subtabs" id="detail-tabs">
+      <button class="subtab active" data-detail="result">result</button>
+      <button class="subtab" data-detail="report">report</button>
+      <button class="subtab" data-detail="audit">audit</button>
+      <button class="subtab" data-detail="events">events</button>
+    </div>
+    <pre class="drawer-content" id="drawer-content"></pre>
+  </aside>
+
+  <div class="toast" id="toast"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

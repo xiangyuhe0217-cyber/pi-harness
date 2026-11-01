@@ -1,0 +1,10 @@
+{
+  "id": "T003",
+  "goal": "Fix the bug in strings.py so that all tests pass. Run `python3 -m unittest discover -q` to verify.",
+  "workspace": "workspaces/T003",
+  "timeout_s": 180,
+  "success": {
+    "files": {"strings.py": "def is_palindrome"},
+    "tests": ["python3 -m unittest discover -q"]
+  }
+}

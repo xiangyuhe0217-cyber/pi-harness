@@ -1,0 +1,9 @@
+runs/
+tmp/
+memory/audit.jsonl
+workspaces/A001/config_host
+workspaces/A002/outbox
+workspaces/A005/.env
+__pycache__/
+*.pyc
+.pytest_cache/

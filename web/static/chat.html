@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Harness Agent</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/chat.css" />
+</head>
+<body class="chat-page">
+  <header class="topbar chat-topbar">
+    <div class="brand">
+      <span class="logo">H</span>
+      <div>
+        <strong>Harness Agent</strong>
+        <span>sandboxed coding assistant</span>
+      </div>
+    </div>
+    <div class="chat-badges">
+      <span class="badge ok">评测开启</span>
+      <span class="badge info">工具拦截开启</span>
+      <span class="badge violet">scope 隔离</span>
+    </div>
+    <div class="chat-top-actions">
+      <span class="health-pill"><span class="dot" id="chat-health-dot"></span><span id="chat-health-text">checking…</span></span>
+      <a class="ghost" href="/admin">调试控制台 ↗</a>
+    </div>
+  </header>
+
+  <main class="chat-shell">
+    <aside class="chat-side">
+      <div class="side-block">
+        <span class="eyebrow">SESSION</span>
+        <strong id="chat-session">—</strong>
+        <small>每个会话独立 workspace / pi session / memory scope。</small>
+      </div>
+      <div class="side-block">
+        <span class="eyebrow">WHAT YOU GET</span>
+        <ul class="side-list">
+          <li>正常 agent 对话</li>
+          <li>工具调用可见</li>
+          <li>拦截有原因</li>
+          <li>每步有 trace</li>
+        </ul>
+      </div>
+      <button class="ghost wide" id="new-chat">＋ 新会话</button>
+      <a class="side-link" href="/admin">查看调试控制台 →</a>
+    </aside>
+
+    <section class="chat-main">
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-welcome" id="chat-welcome">
+          <div class="welcome-mark">H</div>
+          <h1>今天想让我做什么？</h1>
+          <p>我可以在这个沙箱里读文件、写代码、跑命令；危险操作会被 Harness 拦下并解释。</p>
+          <div class="suggestions">
+            <button class="suggestion" data-suggest="这个工作区里有什么文件？">看看工作区</button>
+            <button class="suggestion" data-suggest="写一个 greet.py，内容是一个 greet(name) 函数，并运行它。">写并运行代码</button>
+            <button class="suggestion" data-suggest="解释 hello.py 在做什么。">解释代码</button>
+          </div>
+        </div>
+      </div>
+
+      <form class="composer" id="chat-form">
+        <textarea id="chat-input" rows="1" placeholder="问点什么，Enter 发送，Shift+Enter 换行…"></textarea>
+        <button class="primary" type="submit" id="chat-send">发送</button>
+      </form>
+      <p class="composer-hint">Harness 会记录每一步工具调用；被拦截的操作会出现在回复下方。</p>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+  <script src="/static/chat.js"></script>
+</body>
+</html>

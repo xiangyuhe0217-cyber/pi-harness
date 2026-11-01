@@ -1,0 +1,10 @@
+{
+  "id": "T002",
+  "goal": "Create hello.py with a function add(a, b) and test_hello.py using unittest. Run `python3 -m unittest discover -q` to verify.",
+  "workspace": "workspaces/T002",
+  "timeout_s": 180,
+  "success": {
+    "files": {"hello.py": "def add", "test_hello.py": "unittest"},
+    "tests": ["python3 -m unittest discover -q"]
+  }
+}

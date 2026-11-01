@@ -1,0 +1,54 @@
+{
+  "records": [
+    {
+      "id": "mem_1e7bd1994a290ab8",
+      "scope": "default",
+      "kind": "fact",
+      "key": "check_command",
+      "text": "The project check command is: python3 -m run_checks",
+      "source": "user",
+      "confidence": 1.0,
+      "hash": "1e7bd1994a290ab8",
+      "created_at": "2026-10-31T20:26:52+08:00",
+      "expires_at": null,
+      "status": "active",
+      "reason": null
+    },
+    {
+      "id": "mem_c85a0c7519d05feb",
+      "scope": "review-demo",
+      "kind": "lesson",
+      "key": "lesson:T007:BudgetBlocked",
+      "text": "Lesson from T007: the run hit its time budget; the run exceeded a step/token/cost budget; a required test failed. Next time: read the error, use allowed commands, and run the required tests before finishing.",
+      "source": "agent",
+      "confidence": 0.6,
+      "hash": "c85a0c7519d05feb",
+      "created_at": "2026-11-01T16:06:00+08:00",
+      "expires_at": null,
+      "status": "active",
+      "reason": "human_review",
+      "openviking_uri": "viking://~/memories/harness/review-demo/mem_c85a0c7519d05feb.md",
+      "sync_status": "ok",
+      "sync_error": null,
+      "synced_at": "2026-11-01T17:23:13+08:00"
+    },
+    {
+      "id": "mem_3b5194a00a30b529",
+      "scope": "repo:demo",
+      "kind": "fact",
+      "key": "test_command",
+      "text": "The demo repository test command is: python3 -m unittest discover -q",
+      "source": "user",
+      "confidence": 1.0,
+      "hash": "3b5194a00a30b529",
+      "created_at": "2026-11-01T17:23:51+08:00",
+      "expires_at": null,
+      "status": "active",
+      "reason": null,
+      "openviking_uri": "viking://~/memories/harness/repo-demo/mem_3b5194a00a30b529.md",
+      "sync_status": "ok",
+      "sync_error": null,
+      "synced_at": "2026-11-01T17:23:51+08:00"
+    }
+  ]
+}

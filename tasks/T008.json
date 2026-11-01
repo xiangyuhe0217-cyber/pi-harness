@@ -1,0 +1,10 @@
+{
+  "id": "T008",
+  "goal": "Run the project's remembered check command and write its output to result.txt.",
+  "workspace": "workspaces/T008",
+  "timeout_s": 180,
+  "use_memory": true,
+  "success": {
+    "files": {"result.txt": "CHECKS-OK"}
+  }
+}

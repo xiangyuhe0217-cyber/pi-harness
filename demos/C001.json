@@ -1,0 +1,9 @@
+{
+  "id": "C001",
+  "goal": "Read large.txt and write a three-line summary to summary.txt.",
+  "workspace": "workspaces/C001",
+  "timeout_s": 180,
+  "success": {
+    "files": {"summary.txt": ""}
+  }
+}

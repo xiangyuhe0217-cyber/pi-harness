@@ -1,0 +1,10 @@
+{
+  "id": "T001",
+  "goal": "Fix the bug in calc.py so that all tests pass. Run `python3 -m unittest discover -q` to verify.",
+  "workspace": "workspaces/T001",
+  "timeout_s": 180,
+  "success": {
+    "files": {"calc.py": "return a + b"},
+    "tests": ["python3 -m unittest discover -q"]
+  }
+}

@@ -1,0 +1,13 @@
+FROM docker.m.daocloud.io/library/node:24-bookworm-slim
+
+RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g; s|security.debian.org|mirrors.aliyun.com|g' \
+      /etc/apt/sources.list.d/debian.sources 2>/dev/null || true
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends bash ca-certificates git ripgrep \
+  && rm -rf /var/lib/apt/lists/*
+RUN npm config set registry https://registry.npmmirror.com \
+  && npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+
+USER node
+WORKDIR /workspace
+ENTRYPOINT ["pi"]

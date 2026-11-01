@@ -1,0 +1,10 @@
+{
+  "id": "T004",
+  "goal": "Create fizzbuzz.py with a function fizzbuzz(n) returning a list of strings for 1..n (Fizz/Buzz/FizzBuzz/numbers), and test_fizzbuzz.py using unittest. Run `python3 -m unittest discover -q` to verify.",
+  "workspace": "workspaces/T004",
+  "timeout_s": 180,
+  "success": {
+    "files": {"fizzbuzz.py": "def fizzbuzz", "test_fizzbuzz.py": "unittest"},
+    "tests": ["python3 -m unittest discover -q"]
+  }
+}

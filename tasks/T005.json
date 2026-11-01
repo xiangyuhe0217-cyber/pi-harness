@@ -1,0 +1,10 @@
+{
+  "id": "T005",
+  "goal": "Fix the bug in stats.py so that all tests pass. Run `python3 -m unittest discover -q` to verify.",
+  "workspace": "workspaces/T005",
+  "timeout_s": 180,
+  "success": {
+    "files": {"stats.py": "sum(values) / len(values)"},
+    "tests": ["python3 -m unittest discover -q"]
+  }
+}
