@@ -165,6 +165,7 @@ harness/
 - [W2](docs/w2.md) / [W3](docs/w3.md) / [W4](docs/w4.md) / [W5](docs/w5.md) / [W6](docs/w6.md) / [W7](docs/w7.md) / [W8](docs/w8.md)
 - [Web Console](docs/web.md)
 - [WSL Quickstart](docs/wsl-setup.md)
+- [pi-harness 面试手册](docs/pi-harness-interview.md)
 - [OpenViking 接入](docs/openviking.md)
 - [SWE-bench adapter](eval/README.md)
 - [RSI / GEPA](rsi/README.md)
