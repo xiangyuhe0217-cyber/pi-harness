@@ -1,5 +1,7 @@
 runs/
 tmp/
+eval/work/
+.venv-eval/
 memory/audit.jsonl
 workspaces/A001/config_host
 workspaces/A002/outbox

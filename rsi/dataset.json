@@ -1,0 +1,15 @@
+{
+  "dev": [
+    "tasks/T001.json",
+    "tasks/T002.json",
+    "tasks/T003.json",
+    "tasks/T004.json",
+    "tasks/T005.json",
+    "tasks/T006.json",
+    "tasks/T008.json"
+  ],
+  "holdout": [
+    "demos/C001.json",
+    "demos/T007.json"
+  ]
+}

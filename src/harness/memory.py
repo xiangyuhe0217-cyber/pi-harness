@@ -138,6 +138,7 @@ class MemoryStore:
         source: str = "agent",
         confidence: float = 0.5,
         ttl_days: int | None = None,
+        extra: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         self._expire()
         digest = _hash(text)
@@ -169,6 +170,8 @@ class MemoryStore:
             "status": "active" if decision == "allow" else "quarantined",
             "reason": rule,
         }
+        if extra:
+            record.update(extra)
         if ttl_days:
             from datetime import timedelta
 
@@ -214,6 +217,12 @@ class MemoryStore:
     def get(self, record_id: str) -> dict[str, Any] | None:
         for record in self.records:
             if record.get("id") == record_id:
+                return record
+        return None
+
+    def find_by_source(self, source_uri: str) -> dict[str, Any] | None:
+        for record in self.records:
+            if record.get("viking_source_uri") == source_uri:
                 return record
         return None
 

@@ -19,7 +19,7 @@ def snapshot(root: Path) -> dict[str, str]:
     for path in root.rglob("*"):
         if path.is_symlink() or not path.is_file():
             continue
-        if any(part in {".pi", "__pycache__", "runs"} for part in path.parts):
+        if any(part in {".pi", "__pycache__", "runs", ".git"} for part in path.parts):
             continue
         out[path.relative_to(root).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
     return out

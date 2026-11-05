@@ -120,6 +120,14 @@ bash scripts/web.sh
 
 页面能力：正常对话、工具调用可见、失败 trace 抽 lesson、记忆审核（approve/reject）、scope 隔离、OpenViking 语义检索 + approve 同步。
 
+## 三条链路（实现中）
+
+- **评测**：`eval/swebench`，12 条 SWE-bench Lite 子集 × MCP-only/builtin；官方 evaluator。用法见 [eval/README](eval/README.md)。
+- **RSI**：`rsi/`，GEPA prompt optimization + dev/holdout + 人工 gate。用法见 [rsi/README](rsi/README.md)。
+- **记忆**：`src/harness/memory_staging.py` + `memory_recall.py`；OpenViking staging 抽取 → quarantine → approve → canonical content/write → context recall。见 [memory/README](memory/README.md)。
+
+> 代码先落地，真实 12 条 SWE-bench / GEPA / LoCoMo 数据还没跑；不要把这些链路的“脚手架”当成已完成结果。
+
 ## 目录
 
 ```
@@ -130,15 +138,19 @@ harness/
 │  ├─ analyze.py       verdict / 归因 / watchdog / context
 │  ├─ replay.py        策略回放
 │  ├─ export.py        OTLP-style 导出
+│  ├─ memory_staging.py OpenViking session 抽取
+│  ├─ memory_recall.py  OpenViking context 召回
 │  └─ runner.py        run / resume
+├─ eval/swebench/      SWE-bench 子集 adapter
+├─ rsi/                GEPA prompt optimization
 ├─ tasks/              T001–T008
 ├─ attacks/            A001–A013
 ├─ policies/           p1 / p2 / p3
 ├─ demos/              C001 / T007
-├─ memory/             store.json + audit.jsonl
-├─ tests/              test_memory.py
+├─ memory/             store.json + audit + memory README
+├─ tests/              memory tests
 ├─ web/                server.py + static（Web Console）
-├─ scripts/            web.sh / measure.py
+├─ scripts/            web.sh / measure.py / memory_*.py
 ├─ docker/             pi-sandbox
 └─ docs/               spec / w0–w8 / web / openviking / interview / demo
 ```
@@ -150,6 +162,9 @@ harness/
 - [W2](docs/w2.md) / [W3](docs/w3.md) / [W4](docs/w4.md) / [W5](docs/w5.md) / [W6](docs/w6.md) / [W7](docs/w7.md) / [W8](docs/w8.md)
 - [Web Console](docs/web.md)
 - [OpenViking 接入](docs/openviking.md)
+- [SWE-bench adapter](eval/README.md)
+- [RSI / GEPA](rsi/README.md)
+- [Memory chain](memory/README.md)
 - [Demo 脚本](docs/demo.md)
 - [面试与简历材料](docs/interview.md)
 - [简历一页纸](docs/resume.md)

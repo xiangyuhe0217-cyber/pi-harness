@@ -135,14 +135,28 @@ def run_task(
     memory_scope = scope or os.environ.get("HARNESS_MEMORY_SCOPE") or task.scope
     memory_used: list[dict[str, Any]] = []
     if task.use_memory:
-        memory_block = memory_store.prompt_block(memory_scope, task.goal)
+        memory_block = ""
+        if os.environ.get("HARNESS_MEMORY_RECALL") == "openviking":
+            try:
+                from .memory_recall import recall_block
+                from .openviking import OpenVikingClient
+
+                recalled = recall_block(OpenVikingClient(), memory_scope, task.goal)
+                if recalled["ok"]:
+                    memory_block = recalled["block"]
+                    memory_used = list(recalled["items"])
+            except Exception:
+                memory_block = ""
+        if not memory_block:
+            memory_block = memory_store.prompt_block(memory_scope, task.goal)
+            if memory_block:
+                memory_used = memory_store.search(memory_scope, task.goal)
         if memory_block:
             effective_prompt = (
                 f"{effective_prompt}\n\n{memory_block}".strip()
                 if effective_prompt
                 else memory_block
             )
-            memory_used = memory_store.search(memory_scope, task.goal)
 
     state_path = run_dir / "run_state.json"
     state = {

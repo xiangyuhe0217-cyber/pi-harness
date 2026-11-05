@@ -139,6 +139,34 @@ class OpenVikingClient:
                 )
         return records[:limit]
 
+    def search_context(
+        self,
+        query: str,
+        scope: str | None = None,
+        limit: int = 5,
+        token_budget: int = 2000,
+    ) -> dict[str, Any]:
+        """Recall assembled context via OpenViking search(mode="context")."""
+        if not query.strip():
+            return {"rendered": "", "items": []}
+        target = f"{HARNESS_ROOT}/{scope_slug(scope)}" if scope else HARNESS_ROOT
+        payload = self._request(
+            "POST",
+            "/api/v1/search/search",
+            {
+                "query": query,
+                "mode": "context",
+                "limit": int(limit),
+                "target_uri": target,
+                "context_type": ["memory"],
+                "token_budget": int(token_budget),
+            },
+        )
+        result = payload.get("result") or {}
+        items = result.get("memories") or result.get("resources") or []
+        rendered = result.get("rendered") or result.get("context") or ""
+        return {"rendered": str(rendered), "items": items, "raw": payload}
+
 
 def sync_record(client: OpenVikingClient, store: Any, record: dict[str, Any]) -> dict[str, Any]:
     if not client.configured:
