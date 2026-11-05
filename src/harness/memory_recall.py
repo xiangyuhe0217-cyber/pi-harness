@@ -11,7 +11,7 @@ def format_recall(payload: dict[str, Any], max_chars: int = 2000) -> str:
         return rendered[:max_chars]
     lines = ["<long_term_memory>"]
     for item in payload.get("items") or []:
-        text = item.get("content") or item.get("abstract") or item.get("uri") or ""
+        text = item.get("content") or item.get("text") or item.get("abstract") or item.get("uri") or ""
         lines.append(f"- {str(text)[:300]}")
     lines.append("</long_term_memory>")
     return "\n".join(lines)[:max_chars]

@@ -146,26 +146,15 @@ class OpenVikingClient:
         limit: int = 5,
         token_budget: int = 2000,
     ) -> dict[str, Any]:
-        """Recall assembled context via OpenViking search(mode="context")."""
+        """Recall memory records and let the caller assemble a context block.
+
+        OpenViking's context mode rejects target_uri, so scoped recall uses the
+        find endpoint and keeps the scope boundary explicit.
+        """
         if not query.strip():
             return {"rendered": "", "items": []}
-        target = f"{HARNESS_ROOT}/{scope_slug(scope)}" if scope else HARNESS_ROOT
-        payload = self._request(
-            "POST",
-            "/api/v1/search/search",
-            {
-                "query": query,
-                "mode": "context",
-                "limit": int(limit),
-                "target_uri": target,
-                "context_type": ["memory"],
-                "token_budget": int(token_budget),
-            },
-        )
-        result = payload.get("result") or {}
-        items = result.get("memories") or result.get("resources") or []
-        rendered = result.get("rendered") or result.get("context") or ""
-        return {"rendered": str(rendered), "items": items, "raw": payload}
+        records = self.search(query, limit=limit, scope=scope)
+        return {"rendered": "", "items": records, "raw": {"mode": "find"}}
 
 
 def sync_record(client: OpenVikingClient, store: Any, record: dict[str, Any]) -> dict[str, Any]:

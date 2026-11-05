@@ -54,7 +54,7 @@ def run_one(
     )
     run_workspace = Path(result["workspace"])
     try:
-        patch = extract_patch(run_workspace)
+        patch = extract_patch(run_workspace, exclude_tests=True)
     except Exception as exc:  # noqa: BLE001
         patch = ""
         result["patch_error"] = str(exc)

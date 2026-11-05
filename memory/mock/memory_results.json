@@ -1,0 +1,33 @@
+{
+  "mode": "mock",
+  "warning": "Synthetic extraction quality and end-to-end memory accuracy; staging counts are based on the local batch, quality labels are mock.",
+  "staging": {
+    "traces": 20,
+    "candidates": 33,
+    "quarantined": 30,
+    "approved": 3,
+    "kinds": {
+      "events": 24,
+      "entities": 7,
+      "preferences": 2
+    },
+    "precision": 0.84,
+    "recall": 0.71
+  },
+  "recall": {
+    "questions": 20,
+    "hit_at_5": 0.9,
+    "answer_accuracy": 0.72,
+    "poison_blocked": 5,
+    "poison_total": 5
+  },
+  "locomo_real": {
+    "documents": 272,
+    "cases": 1977,
+    "hit_at_1": 0.6591,
+    "hit_at_3": 0.8397,
+    "hit_at_5": 0.8988,
+    "hit_at_10": 0.957,
+    "mrr": 0.7622
+  }
+}

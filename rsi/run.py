@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -24,9 +25,22 @@ def _best(result: object) -> str:
 def run_gepa(seed: str, dev: list[str], holdout: list[str], max_calls: int, out: str) -> dict:
     try:
         import gepa.optimize_anything as oa
-        from gepa.optimize_anything import GEPAConfig, EngineConfig, optimize_anything
+        from gepa.optimize_anything import (
+            GEPAConfig,
+            EngineConfig,
+            ReflectionConfig,
+            optimize_anything,
+        )
     except ImportError as exc:
         raise RuntimeError("GEPA not installed: pip install gepa") from exc
+
+    reflection = ReflectionConfig(
+        reflection_lm=os.environ.get("GEPA_REFLECTION_MODEL", "openai/deepseek-chat"),
+        reflection_lm_kwargs={
+            "api_base": os.environ.get("GEPA_API_BASE", "http://127.0.0.1:4000/v1"),
+            "api_key": os.environ.get("GEPA_API_KEY", "local"),
+        },
+    )
 
     def evaluator(candidate: str) -> float:
         summary = evaluate_prompt(candidate, dev)
@@ -40,7 +54,10 @@ def run_gepa(seed: str, dev: list[str], holdout: list[str], max_calls: int, out:
             "Improve coding-agent pass rate without increasing tokens, cost, "
             "blocked calls, or unsafe behavior."
         ),
-        config=GEPAConfig(engine=EngineConfig(max_metric_calls=max_calls)),
+        config=GEPAConfig(
+            engine=EngineConfig(max_metric_calls=max_calls),
+            reflection=reflection,
+        ),
     )
     winner = _best(result)
     target = Path(out)

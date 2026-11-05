@@ -1,0 +1,231 @@
+{
+  "mode": "mock",
+  "dataset": "SWE-bench Lite 12-instance subset",
+  "warning": "Synthetic resolved labels; not produced by the official evaluator.",
+  "summary": {
+    "mcp": {
+      "resolved": 8,
+      "total": 12,
+      "resolved_rate": 0.6667,
+      "patch_applied": 11,
+      "empty_patch": 1,
+      "tokens": 3678000,
+      "cost_usd": 0.2164
+    },
+    "builtin": {
+      "resolved": 5,
+      "total": 12,
+      "resolved_rate": 0.4167,
+      "patch_applied": 9,
+      "empty_patch": 3,
+      "tokens": 2430000,
+      "cost_usd": 0.143
+    }
+  },
+  "instances": [
+    {
+      "instance_id": "astropy__astropy-6938",
+      "mcp": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 180000,
+        "cost_usd": 0.0106
+      },
+      "builtin": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 120000,
+        "cost_usd": 0.0071
+      }
+    },
+    {
+      "instance_id": "django__django-14608",
+      "mcp": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 203000,
+        "cost_usd": 0.0119
+      },
+      "builtin": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 135000,
+        "cost_usd": 0.0079
+      }
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-26020",
+      "mcp": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 226000,
+        "cost_usd": 0.0133
+      },
+      "builtin": {
+        "resolved": false,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 150000,
+        "cost_usd": 0.0088
+      }
+    },
+    {
+      "instance_id": "mwaskom__seaborn-3010",
+      "mcp": {
+        "resolved": false,
+        "patch_applied": false,
+        "empty_patch": true,
+        "tokens": 249000,
+        "cost_usd": 0.0146
+      },
+      "builtin": {
+        "resolved": false,
+        "patch_applied": false,
+        "empty_patch": true,
+        "tokens": 165000,
+        "cost_usd": 0.0097
+      }
+    },
+    {
+      "instance_id": "pallets__flask-4992",
+      "mcp": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 272000,
+        "cost_usd": 0.016
+      },
+      "builtin": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 180000,
+        "cost_usd": 0.0106
+      }
+    },
+    {
+      "instance_id": "psf__requests-2148",
+      "mcp": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 295000,
+        "cost_usd": 0.0174
+      },
+      "builtin": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 195000,
+        "cost_usd": 0.0115
+      }
+    },
+    {
+      "instance_id": "pydata__xarray-4248",
+      "mcp": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 318000,
+        "cost_usd": 0.0187
+      },
+      "builtin": {
+        "resolved": false,
+        "patch_applied": false,
+        "empty_patch": true,
+        "tokens": 210000,
+        "cost_usd": 0.0124
+      }
+    },
+    {
+      "instance_id": "pylint-dev__pylint-6506",
+      "mcp": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 341000,
+        "cost_usd": 0.0201
+      },
+      "builtin": {
+        "resolved": false,
+        "patch_applied": false,
+        "empty_patch": true,
+        "tokens": 225000,
+        "cost_usd": 0.0132
+      }
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7490",
+      "mcp": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 364000,
+        "cost_usd": 0.0214
+      },
+      "builtin": {
+        "resolved": false,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 240000,
+        "cost_usd": 0.0141
+      }
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13497",
+      "mcp": {
+        "resolved": false,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 387000,
+        "cost_usd": 0.0228
+      },
+      "builtin": {
+        "resolved": true,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 255000,
+        "cost_usd": 0.015
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8713",
+      "mcp": {
+        "resolved": false,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 410000,
+        "cost_usd": 0.0241
+      },
+      "builtin": {
+        "resolved": false,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 270000,
+        "cost_usd": 0.0159
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-14396",
+      "mcp": {
+        "resolved": false,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 433000,
+        "cost_usd": 0.0255
+      },
+      "builtin": {
+        "resolved": false,
+        "patch_applied": true,
+        "empty_patch": false,
+        "tokens": 285000,
+        "cost_usd": 0.0168
+      }
+    }
+  ]
+}

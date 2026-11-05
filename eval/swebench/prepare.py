@@ -3,7 +3,9 @@ from __future__ import annotations
 import argparse
 import shutil
 import subprocess
+import tarfile
 import tempfile
+import urllib.request
 from pathlib import Path
 
 from .manifest import Instance, load_manifest
@@ -34,24 +36,53 @@ def _slug(value: str) -> str:
     return value.replace("/", "__").replace("\\", "__")
 
 
+def _snapshot(repo: str, base_commit: str, target: Path) -> None:
+    """Download a commit tarball; avoids fragile git fetch on restricted networks."""
+    proxy = "https://gh-proxy.com/"
+    url = f"{proxy}https://github.com/{repo}/archive/{base_commit}.tar.gz"
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        archive = tmp_path / "repo.tar.gz"
+        request = urllib.request.Request(url, headers={"User-Agent": "pi-harness-eval"})
+        with urllib.request.urlopen(request, timeout=300) as response:
+            archive.write_bytes(response.read())
+        extract_root = tmp_path / "extract"
+        extract_root.mkdir()
+        with tarfile.open(archive, "r:gz") as tar:
+            tar.extractall(extract_root, filter="data")
+        children = [item for item in extract_root.iterdir() if item.is_dir()]
+        if len(children) != 1:
+            raise RuntimeError(f"unexpected archive layout for {repo}")
+        if target.exists():
+            shutil.rmtree(target)
+        shutil.copytree(children[0], target, symlinks=True)
+    _git(["init"], target)
+    _git(["config", "user.email", "harness@example.invalid"], target)
+    _git(["config", "user.name", "harness"], target)
+    _git(["add", "-A"], target)
+    _git(["commit", "-m", "swe-bench base snapshot"], target)
+
+
 def ensure_repo(repo: str, base_commit: str, cache_root: Path) -> Path:
-    """Clone once per SWE-bench repo and check out the instance base commit."""
     cache_root.mkdir(parents=True, exist_ok=True)
     target = cache_root / _slug(repo)
-    if not target.exists():
-        _git(
-            ["clone", "--no-checkout", f"https://github.com/{repo}.git", str(target)],
-            cache_root,
-        )
     try:
-        _git(["cat-file", "-e", f"{base_commit}^{{commit}}"], target)
-    except RuntimeError:
-        _git(["fetch", "origin", "--tags"], target)
+        _snapshot(repo, base_commit, target)
+        return target
+    except Exception:
+        # Fallback: shallow fetch if the archive endpoint is blocked.
+        pass
+    url = f"https://github.com/{repo}.git"
+    if not (target / ".git").exists():
+        if target.exists():
+            shutil.rmtree(target)
+        _git(["init", str(target)], cache_root)
+        _git(["remote", "add", "origin", url], target)
     try:
-        _git(["checkout", "--force", base_commit], target)
+        _git(["fetch", "--depth", "1", "--no-tags", "origin", base_commit], target)
     except RuntimeError:
-        _git(["fetch", "origin", base_commit], target)
-        _git(["checkout", "--force", base_commit], target)
+        _git(["fetch", "--no-tags", "origin", base_commit], target)
+    _git(["checkout", "--force", base_commit], target)
     _git(["clean", "-fdx"], target)
     return target
 
@@ -63,7 +94,7 @@ def prepare_instance(instance: Instance, cache_root: Path, work_root: Path) -> P
         shutil.rmtree(target)
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(source, target, symlinks=True)
-    reset_repo(target, instance.base_commit)
+    reset_repo(target, "HEAD")
     return target
 
 
