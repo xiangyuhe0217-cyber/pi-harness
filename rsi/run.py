@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from rsi.gepa_optimizer import evaluate_prompt, _load_dataset  # noqa: E402
+from rsi.gate import gate  # noqa: E402
 
 
 def _best(result: object) -> str:
@@ -20,7 +21,7 @@ def _best(result: object) -> str:
     return str(candidate or "")
 
 
-def run_gepa(seed: str, dev: list[str], max_calls: int, out: str) -> dict:
+def run_gepa(seed: str, dev: list[str], holdout: list[str], max_calls: int, out: str) -> dict:
     try:
         import gepa.optimize_anything as oa
         from gepa.optimize_anything import GEPAConfig, EngineConfig, optimize_anything
@@ -44,9 +45,22 @@ def run_gepa(seed: str, dev: list[str], max_calls: int, out: str) -> dict:
     winner = _best(result)
     target = Path(out)
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(winner, encoding="utf-8")
+    candidate_path = target.parent / "candidate.txt"
+    candidate_path.write_text(winner, encoding="utf-8")
+
+    baseline = evaluate_prompt(seed, holdout)
+    candidate = evaluate_prompt(winner, holdout)
+    decision = gate(baseline, candidate)
+    (target.parent / "gate.json").write_text(
+        json.dumps(decision, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    if decision["adopted"]:
+        target.write_text(winner, encoding="utf-8")
     payload = {
-        "best_candidate": winner,
+        "adopted": decision["adopted"],
+        "best_candidate": winner if decision["adopted"] else None,
+        "candidate_path": str(candidate_path),
+        "gate": decision,
         "best_score": getattr(result, "best_score", None),
         "raw": str(result)[:4000],
     }
@@ -78,7 +92,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(evaluate_prompt(prompt, holdout), ensure_ascii=False, indent=2)[:4000])
         return 0
 
-    result = run_gepa(seed, dev, args.max_calls, args.out)
+    result = run_gepa(seed, dev, holdout, args.max_calls, args.out)
     print(json.dumps(result, ensure_ascii=False, indent=2)[:4000])
     return 0
 

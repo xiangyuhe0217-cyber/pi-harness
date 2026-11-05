@@ -6,6 +6,7 @@ import json
 import unittest
 
 from rsi.gepa_optimizer import score_results
+from rsi.gate import gate
 
 
 class RsiScoreTests(unittest.TestCase):
@@ -31,6 +32,16 @@ class RsiScoreTests(unittest.TestCase):
         for path in data["dev"] + data["holdout"]:
             with open(path, encoding="utf-8") as handle:
                 self.assertTrue(handle.read())
+
+    def test_gate_blocks_regression(self):
+        baseline = {"pass_rate": 0.8, "score": 0.8, "cost_usd": 0.01, "blocked": 1}
+        winner = {"pass_rate": 0.7, "score": 0.7, "cost_usd": 0.01, "blocked": 1}
+        self.assertFalse(gate(baseline, winner)["adopted"])
+
+    def test_gate_accepts_equal_or_better(self):
+        baseline = {"pass_rate": 0.8, "score": 0.8, "cost_usd": 0.01, "blocked": 1}
+        winner = {"pass_rate": 0.9, "score": 0.9, "cost_usd": 0.01, "blocked": 1}
+        self.assertTrue(gate(baseline, winner)["adopted"])
 
 
 if __name__ == "__main__":
