@@ -104,6 +104,9 @@ PYTHONPATH=src python3 -m harness.cli run --task tasks/T008.json --mcp-only
 
 ## Web Console
 
+WSL 项目路径：`~/pi-harness`（从 `D:\dsh-pro-harness\harness` 复制，含本地 commits）。
+完整启动说明见 [WSL Quickstart](docs/wsl-setup.md)。
+
 不想记 CLI 就用页面：
 
 ```bash
@@ -113,7 +116,7 @@ bash scripts/web.sh
 
 - **用户端 `/`**：正常 agent 对话框，面向体验。
 - **调试台 `/admin`**：跑 task/attack/demo、看 result/report/audit/events、记忆审核。
-- **LiteLLM 必须先运行**（`127.0.0.1:4000`）；它是模型代理。
+- **LiteLLM 必须先运行**（`127.0.0.1:4000`）；它是模型代理。当前 WSL 上 LiteLLM 启动会卡在远程 cost map 拉取，开发时可用 `scripts/mini_openai_proxy.py` 兜底；生产仍用 LiteLLM。
 - **pi 不用单独启动**：它是 CLI，每次 run 由 `runner.py` 调起。
 - **OpenViking**：已在本机启动（`127.0.0.1:1933`，`auth_mode=dev` 无鉴权）；不启动也能用本地 `memory/store.json`。
 - **鉴权**：Harness Web 可选 `HARNESS_WEB_TOKEN`；设置后 UI 首次 401 弹 token，API 用 `Bearer`。默认本机不设。
@@ -161,6 +164,7 @@ harness/
 - [W0 验证清单](docs/w0-verification.md)
 - [W2](docs/w2.md) / [W3](docs/w3.md) / [W4](docs/w4.md) / [W5](docs/w5.md) / [W6](docs/w6.md) / [W7](docs/w7.md) / [W8](docs/w8.md)
 - [Web Console](docs/web.md)
+- [WSL Quickstart](docs/wsl-setup.md)
 - [OpenViking 接入](docs/openviking.md)
 - [SWE-bench adapter](eval/README.md)
 - [RSI / GEPA](rsi/README.md)
